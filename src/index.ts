@@ -62,21 +62,10 @@ cleanFiles();
     );
 
    // ⛔ 禁用 EPG 抓取
-// const epgs = await Promise.allSettled(
-//   epgs_sources.map(async (epg_sr) => {
-//     ...
-//   })
-// );
+const epgs: any[] = [];
 
 // ⛔ 禁用 epg.pw
-// try {
-//   console.log('[TASK] Build EPG from epg.pw ...');
-//   const epgPwXml = await buildEpgPwXml();
-//   await writeEpgXML('epg_pw', epgPwXml);
-//   console.log('[TASK] EPG from epg.pw written successfully');
-// } catch (e) {
-//   console.warn('[WARNING] EPG from epg.pw failed:', e);
-// }
+// EPG disabled
 
 ...
 // ⛔ 禁用 EPG JSON 生成
