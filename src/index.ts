@@ -61,53 +61,26 @@ cleanFiles();
       })
     );
 
-    const epgs = await Promise.allSettled(
-      epgs_sources.map(async (epg_sr) => {
-        console.log(`[TASK] Fetch EPG ${epg_sr.name}`);
-        try {
-          const [ok, text, now] = await getContent(epg_sr);
+   // ⛔ 禁用 EPG 抓取
+// const epgs = await Promise.allSettled(
+//   epgs_sources.map(async (epg_sr) => {
+//     ...
+//   })
+// );
 
-          if (ok && !!text) {
-            console.log(
-              `Fetch EPG from ${epg_sr.name} finished, cost ${
-                (parseInt(hrtime.bigint().toString()) - parseInt(now.toString())) / 10e6
-              } ms`
-            );
-            await writeEpgXML(epg_sr.f_name, text as string);
-            return ['normal'];
-          }
-          console.log(`[WARNING] EPG ${epg_sr.name} get failed!`);
-          return [void 0];
-        } catch (_e) {
-          console.warn('Error fetching EPG', _e, epg_sr);
-          console.log(`[WARNING] EPG ${epg_sr.name} get failed!`);
-          return [void 0];
-        }
-      })
-    );
+// ⛔ 禁用 epg.pw
+// try {
+//   console.log('[TASK] Build EPG from epg.pw ...');
+//   const epgPwXml = await buildEpgPwXml();
+//   await writeEpgXML('epg_pw', epgPwXml);
+//   console.log('[TASK] EPG from epg.pw written successfully');
+// } catch (e) {
+//   console.warn('[WARNING] EPG from epg.pw failed:', e);
+// }
 
-    // epg.pw EPG: 从频道列表页抓取所有频道并逐一拉取 EPG，合并为完整 XML
-    try {
-      console.log('[TASK] Build EPG from epg.pw ...');
-      const epgPwXml = await buildEpgPwXml();
-      await writeEpgXML('epg_pw', epgPwXml);
-      console.log('[TASK] EPG from epg.pw written successfully');
-    } catch (e) {
-      console.warn('[WARNING] EPG from epg.pw failed:', e);
-    }
-
-    console.log(`[TASK] Write important files`);
-    type SourceSettled = PromiseSettledResult<(string | number)[] | (string | undefined)[]>;
-    type EpgSettled = PromiseSettledResult<string[] | undefined[]>;
-    const sources_res = sourcesResult.map((r: SourceSettled) =>
-      r.status === 'fulfilled' ? r.value : undefined
-    ) as Array<[string, number | undefined]>;
-    const epgs_res = epgs.map((r: EpgSettled) =>
-      r.status === 'fulfilled' ? r.value : undefined
-    ) as Array<[string | undefined]>;
-    mergeTxts();
-    mergeSources();
-    await writeEpgJsonByDate();
+...
+// ⛔ 禁用 EPG JSON 生成
+// await writeEpgJsonByDate();
     await writeTvBoxLiveJson('tvbox', sources);
     updateChannelsJson(sources, sources_res, epgs_sources);
     updateReadme(sources, sources_res, epgs_sources, epgs_res);
