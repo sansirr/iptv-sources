@@ -65,7 +65,6 @@ cleanFiles();
 const epgs: any[] = [];
 
 // ⛔ 禁用 epg.pw
-// EPG disabled
 
 ...
 // ⛔ 禁用 EPG JSON 生成
