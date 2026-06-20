@@ -1,15 +1,11 @@
 import { hrtime } from 'process';
 
 import { updateChannelsJson } from './channels';
-import { epgs_sources } from './epgs';
-import { buildEpgPwXml } from './epgs/epg_pw';
 import {
   cleanFiles,
   getContent,
   mergeSources,
   mergeTxts,
-  writeEpgJsonByDate,
-  writeEpgXML,
   writeM3u,
   writeM3uToTxt,
   writeSources,
@@ -61,17 +57,12 @@ cleanFiles();
       })
     );
 
-   // ⛔ 禁用 EPG 抓取
+   // ✅ EPG 已完全禁用
 const epgs: any[] = [];
-
-// ⛔ 禁用 epg.pw
-
-...
-// ⛔ 禁用 EPG JSON 生成
-// await writeEpgJsonByDate();
+const epgs_res: any[] = [];
     await writeTvBoxLiveJson('tvbox', sources);
     updateChannelsJson(sources, sources_res, epgs_sources);
-    updateReadme(sources, sources_res, epgs_sources, epgs_res);
+    updateReadme(sources, sources_res, [], []);
 
     console.log(`[TASK] Make custom sources`);
     runCustomTask();
