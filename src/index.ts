@@ -61,58 +61,15 @@ cleanFiles();
         }
       })
     );
-
-    const epgs = await Promise.allSettled(
-      epgs_sources.map(async (epg_sr) => {
-        console.log(`[TASK] Fetch EPG ${epg_sr.name}`);
-        try {
-          const [ok, text, now] = await getContent(epg_sr);
-
-          if (ok && !!text) {
-            console.log(
-              `Fetch EPG from ${epg_sr.name} finished, cost ${
-                (parseInt(hrtime.bigint().toString()) - parseInt(now.toString())) / 10e6
-              } ms`
-            );
-            await writeEpgXML(epg_sr.f_name, text as string);
-            return ['normal'];
-          }
-          console.log(`[WARNING] EPG ${epg_sr.name} get failed!`);
-          return [void 0];
-        } catch (_e) {
-          console.warn('Error fetching EPG', _e, epg_sr);
-          console.log(`[WARNING] EPG ${epg_sr.name} get failed!`);
-          return [void 0];
-        }
-      })
-    );
-
-    // epg.pw EPG: 从频道列表页抓取所有频道并逐一拉取 EPG，合并为完整 XML
-    // 仅输出 .xml.gz：合并后体积可能超过 Cloudflare Pages 25MB 单文件上限
-    try {
-      console.log('[TASK] Build EPG from epg.pw ...');
-      const epgPwXml = await buildEpgPwXml();
-      await writeEpgXmlGz('epg_pw', epgPwXml);
-      console.log('[TASK] EPG from epg.pw written successfully');
-    } catch (e) {
-      console.warn('[WARNING] EPG from epg.pw failed:', e);
-    }
-
-    console.log(`[TASK] Write important files`);
-    type SourceSettled = PromiseSettledResult<(string | number)[] | (string | undefined)[]>;
-    type EpgSettled = PromiseSettledResult<string[] | undefined[]>;
-    const sources_res = sourcesResult.map((r: SourceSettled) =>
-      r.status === 'fulfilled' ? r.value : undefined
-    ) as Array<[string, number | undefined]>;
-    const epgs_res = epgs.map((r: EpgSettled) =>
-      r.status === 'fulfilled' ? r.value : undefined
-    ) as Array<[string | undefined]>;
+ // ✅ EPG 已完全禁用
+const epgs: any[] = [];
+const epgs_res: any[] = [];
     mergeTxts();
     mergeSources();
     await writeEpgJsonByDate();
     await writeTvBoxLiveJson('tvbox', sources);
     updateChannelsJson(sources, sources_res, epgs_sources);
-    updateReadme(sources, sources_res, epgs_sources, epgs_res);
+    updateReadme(sources, sources_res, [], []);
 
     console.log(`[TASK] Make custom sources`);
     runCustomTask();
