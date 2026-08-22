@@ -4,5 +4,4 @@ overrides:
   rollup: npm:@rollup/wasm-node
 onlyBuiltDependencies:
   - esbuild
-packages:
-  - "."
+
